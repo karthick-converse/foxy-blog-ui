@@ -1,0 +1,286 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.tiptap.ProseMirror{
+  min-height: 300px !important;
+  padding: 2px 4px !important;
+
+}
+
+.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.ProseMirror ul ul {
+  list-style-type: circle;
+}
+
+.ProseMirror ul ul ul {
+  list-style-type: square;
+}
+
+.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+}
+
+.ProseMirror li {
+  margin-bottom: 0.25rem;
+}
+
+/* ---------------- TABLE ---------------- */
+
+.ProseMirror table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.ProseMirror th {
+  background-color: #f4f4f5;
+  font-weight: 600;
+  text-align: left;
+}
+
+.ProseMirror th,
+.ProseMirror td {
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  vertical-align: top;
+  position: relative;
+}
+
+.ProseMirror tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* ---------------- RESIZABLE COLUMN HANDLE ---------------- */
+
+.ProseMirror .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: hsl(var(--primary));
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.ProseMirror th:hover .column-resize-handle,
+.ProseMirror td:hover .column-resize-handle {
+  opacity: 1;
+}
+
+/* ---------------- SELECTED CELL ---------------- */
+
+.ProseMirror .selectedCell {
+  background-color: rgba(59, 130, 246, 0.15);
+}
+
+/* ---------------- TABLE WRAPPER FIX ---------------- */
+
+.ProseMirror .tableWrapper {
+  overflow-x: auto;
+}
+
+
+.ProseMirror {
+  outline: none;
+  min-height: 500px;
+  font-size: 16px;
+  line-height: 1.75;
+  color: #111827;
+}
+
+/* Paragraph spacing */
+.ProseMirror p {
+  margin: 0 0 1em 0;
+}
+
+/* Headings */
+.ProseMirror h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+}
+
+.ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+}
+
+/* Lists */
+.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.ProseMirror li {
+  margin-bottom: 0.25rem;
+}
+
+/* Blockquote */
+.ProseMirror blockquote {
+  border-left: 4px solid hsl(var(--primary));
+  padding-left: 1rem;
+  font-style: italic;
+  color: #6b7280;
+  margin: 1rem 0;
+}
+
+/* Code block */
+.ProseMirror pre {
+  background: #18181b;
+  color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+/* Table */
+.ProseMirror table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.ProseMirror th,
+.ProseMirror td {
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+}
+/* ---------------- IMAGES ---------------- */
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 16px;
+  margin: 1.5rem 0;
+  display: block;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Centered image */
+.ProseMirror img[data-align="center"] {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Left aligned image */
+.ProseMirror img[data-align="left"] {
+  margin-right: auto;
+}
+
+/* Right aligned image */
+.ProseMirror img[data-align="right"] {
+  margin-left: auto;
+}
+
+/* Image selected state */
+.ProseMirror img.ProseMirror-selectednode {
+  outline: 3px solid hsl(var(--primary));
+  border-radius: 16px;
+}
+/* ---------------- LINKS ---------------- */
+
+.ProseMirror a {
+  color: hsl(var(--primary));
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.ProseMirror a:hover {
+  text-decoration: underline;
+}
+/* ---------------- HR ---------------- */
+
+.ProseMirror hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 2rem 0;
+}
+.ProseMirror hr {
+  margin: 2rem 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
