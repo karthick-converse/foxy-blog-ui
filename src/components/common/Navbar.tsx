@@ -36,15 +36,11 @@ export default function Navbar() {
     if (!isAuthenticated) return;
 
     const fetchMe = async () => {
-      try {
-        const data = await apiClient(API_ENDPOINTS.users, {
-          token: token ?? undefined,
-        });
+      const data = await apiClient(API_ENDPOINTS.users, {
+        token: token ?? undefined,
+      });
 
-        setProfile(data);
-      } catch {
-        console.error("Failed to fetch profile");
-      }
+      setProfile(data);
     };
     if (token) fetchMe();
   }, [isAuthenticated, token]);

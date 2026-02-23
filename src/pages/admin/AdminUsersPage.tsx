@@ -7,17 +7,8 @@ import { apiClient } from "../../lib/apiClient";
 import { API_ENDPOINTS } from "../../lib/endpoints";
 import { toast } from "sonner";
 import { colors } from "../../theme/colors";
+import type { User } from "../../interface/AdminDashboard";
 
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: string;
-  authProvider: string;
-  isVerified: boolean;
-  isBlocked: boolean;
-  createdAt: string;
-}
 
 export default function AdminUsersPage() {
   const { token } = useAuth();

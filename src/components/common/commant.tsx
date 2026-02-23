@@ -7,25 +7,7 @@ import { API_ENDPOINTS } from "../../lib/endpoints";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { colors } from "../../theme/colors";
-
-interface CommentType {
-  _id: string;
-  authorId: {
-    _id: string;
-    name: string;
-  };
-  body: string;
-  status: string;
-  createdAt: string;
-  replays: CommentType[];
-}
-
-interface CommentItemProps {
-  comment: CommentType;
-  depth?: number;
-  blogId: string;
-}
-
+import type { CommentItemProps, CommentType } from "../../interface/Comment";
 export default function CommentItem({
   comment,
   depth = 0,
@@ -41,23 +23,20 @@ export default function CommentItem({
   const [status, setStatus] = useState(comment.status);
   const isAdmin = user?.role === "admin";
 
- const handleToggleVisibility = async () => {
-  try {
-    await apiClient(
-      `/admin/comments/${comment._id}/hide`,
-      {
+  const handleToggleVisibility = async () => {
+    try {
+      await apiClient(`/admin/comments/${comment._id}/hide`, {
         method: "PUT",
         token: token ?? undefined,
-      }
-    );
+      });
 
-    setStatus("hidden");
+      setStatus("hidden");
 
-    toast.success("Comment hidden successfully");
-  } catch (error) {
-    toast.error("Failed to hide comment");
-  }
-};
+      toast.success("Comment hidden successfully");
+    } catch (error) {
+      toast.error("Failed to hide comment");
+    }
+  };
 
   const handleReplySubmit = async () => {
     if (!replyText.trim()) return;

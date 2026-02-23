@@ -12,11 +12,10 @@ import {
 } from "lucide-react";
 import { apiClient } from "../../lib/apiClient";
 import { useAuth } from "../../context/AuthContext";
+import type { ShareDropdownProps } from "../../interface/share";
 
-interface ShareDropdownProps {
-  slug: string;
-  title: string;
-}
+
+
 
 export default function ShareDropdown({
   slug,

@@ -9,8 +9,8 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { colors } from "../theme/colors";
-import { apiClient } from "../lib/apiClient";
-import { API_ENDPOINTS, BASE_URL } from "../lib/endpoints";
+import { apiClient, BASE_URL } from "../lib/apiClient";
+import { API_ENDPOINTS} from "../lib/endpoints";
 
 export default function SignIn() {
   const { login } = useAuth();
@@ -55,10 +55,10 @@ export default function SignIn() {
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         {/* LEFT SIDE (Brand Section - hidden on mobile) */}
         <div className="hidden lg:flex flex-col justify-center space-y-6">
-          <h1 className={`text-4xl font-bold ${colors.text.primary}`}>
+          <h1 className={`text-4xl font-bold`}>
             Welcome Back 👋
           </h1>
-          <p className={`text-lg ${colors.text.muted}`}>
+          <p className={`text-lg `}>
             Sign in to continue managing your blogs, posts and dashboard.
           </p>
         </div>
@@ -69,7 +69,7 @@ export default function SignIn() {
           className={`w-full max-w-md mx-auto space-y-6 rounded-2xl p-8 shadow-xl border backdrop-blur-sm ${colors.card} ${colors.border}`}
         >
           <h2
-            className={`text-center text-2xl sm:text-3xl font-bold ${colors.text.primary}`}
+            className={`text-center text-2xl sm:text-3xl font-bold`}
           >
             Sign In
           </h2>
@@ -77,7 +77,7 @@ export default function SignIn() {
           <div className="space-y-5">
             {/* Email */}
             <div className="space-y-2">
-              <Label className={colors.text.primary}>Email</Label>
+              <Label className="text-sm font-medium">Email</Label>
               <Input
                 name="email"
                 type="email"
@@ -105,7 +105,7 @@ export default function SignIn() {
           {/* Divider */}
           <div className="relative text-center text-sm">
             <span
-              className={`px-2 relative z-10 ${colors.text.muted} ${colors.card}`}
+              className={`px-2 relative z-10`}
             >
               or continue with
             </span>

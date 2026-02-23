@@ -29,15 +29,18 @@ import { apiClient } from "../lib/apiClient";
 import { API_ENDPOINTS } from "../lib/endpoints";
 import RichTextEditor from "../components/common/RichTextEditor";
 import { colors } from "../theme/colors";
+import type { Tag } from "../interface/Tag";
+import type { Category } from "../interface/Category";
 
 export default function CreatePost() {
   const { token } = useAuth();
 
+
   const [loading, setLoading] = useState(false);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
-  const [tags, setTags] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
   const coverInputRef = useRef<HTMLInputElement | null>(null);
   const galleryInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -45,7 +48,7 @@ export default function CreatePost() {
     title: "",
     excerpt: "",
     contentHtml: "",
-    contentJson: null as any,
+    contentJson: null as Record<string, unknown> | null,
     status: "draft",
     seoKeywords: "",
     categoryId: "",
@@ -100,7 +103,7 @@ export default function CreatePost() {
       token: token ?? undefined,
     });
 
-    const urls = res.images.map((img: any) => img.url);
+    const urls = (res.images as Array<{ url: string }>).map((img) => img.url);
 
     setForm((prev) => ({
       ...prev,
@@ -138,6 +141,7 @@ export default function CreatePost() {
         galleryInputRef.current.value = "";
       }
       toast.success("Post Created", { id: toastId });
+      setLoading(false);
     } catch {
       toast.error("Failed to publish", { id: toastId });
     }

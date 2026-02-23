@@ -28,21 +28,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-
-interface DashboardData {
-  stats: {
-    totalUsers: number;
-    totalBlogs: number;
-    publishedBlogs: number;
-    draftBlogs: number;
-    totalViews: number;
-    totalReactions: number;
-    totalComments: number;
-  };
-  recentBlogs: any[];
-  recentUsers: any[];
-  reports: any[];
-}
+import type { ChartData, DashboardData } from "../../interface/AdminDashboard";
 
 export default function AdminDashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
@@ -65,8 +51,6 @@ export default function AdminDashboard() {
       }
 
       setData(result.data);
-    } catch (error) {
-      console.error("Error fetching dashboard", error);
     } finally {
       setLoading(false);
     }
@@ -81,7 +65,7 @@ export default function AdminDashboard() {
   }
 
   const reportChartData = Object.values(
-    (data.reports || []).reduce((acc: any, report: any) => {
+    (data.reports || []).reduce((acc: Record<string, ChartData>, report) => {
       const date = new Date(report.createdAt).toISOString().split("T")[0];
 
       if (!acc[date]) {
@@ -92,9 +76,7 @@ export default function AdminDashboard() {
 
       return acc;
     }, {}),
-  ).sort(
-    (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-  );
+  ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">

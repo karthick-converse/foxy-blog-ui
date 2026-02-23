@@ -5,11 +5,14 @@ import { colors } from "../../theme/colors";
 import { apiClient } from "../../lib/apiClient";
 import { API_ENDPOINTS } from "../../lib/endpoints";
 import { useAuth } from "../../context/AuthContext";
+import type { BookmarkItem, BookmarkResponse } from "../../interface/BookMark";
+
+
 
 export default function MyBookmarks() {
   const navigate = useNavigate();
 
-  const [bookmarks, setBookmarks] = useState<any[]>([]);
+  const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
   const [loading, setLoading] = useState(true);
   const { token } = useAuth(); 
   useEffect(() => {
@@ -23,7 +26,7 @@ export default function MyBookmarks() {
         });
 
         const formatted = Array.isArray(res)
-          ? res.map((b: any) => ({
+          ? (res as BookmarkResponse[]).map((b) => ({
               _id: b._id,
               post: b.postId,
               createdAt: b.createdAt,
@@ -31,9 +34,7 @@ export default function MyBookmarks() {
           : [];
 
         setBookmarks(formatted);
-      } catch (error) {
-        console.error("Failed to fetch bookmarks:", error);
-      } finally {
+      }  finally {
         setLoading(false);
       }
     };

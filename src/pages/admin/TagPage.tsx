@@ -6,12 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import { colors } from "../../theme/colors";
 import { apiClient } from "../../lib/apiClient";
 import { API_ENDPOINTS } from "../../lib/endpoints";
-
-interface Tag {
-  _id: string;
-  name: string;
-  slug: string;
-}
+import type { Tag } from "../../interface/Tag";
 
 export default function TagPage() {
   const [tags, setTags] = useState<Tag[]>([]);
@@ -29,16 +24,12 @@ export default function TagPage() {
   };
 
   const fetchTags = async () => {
-    try {
-      const data = await apiClient(API_ENDPOINTS.tags, {
-        method: "GET",
-        token:token ?? undefined,
-      });
+    const data = await apiClient(API_ENDPOINTS.tags, {
+      method: "GET",
+      token: token ?? undefined,
+    });
 
-      setTags(data);
-    } catch (err) {
-      console.error("Error fetching tags:", err);
-    }
+    setTags(data);
   };
 
   useEffect(() => {
@@ -67,24 +58,19 @@ export default function TagPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const method = editId ? "PUT" : "POST";
-      const endpoint = editId
-        ? `${API_ENDPOINTS.tags}/${editId}`
-        : API_ENDPOINTS.tags;
+    const method = editId ? "PUT" : "POST";
+    const endpoint = editId
+      ? `${API_ENDPOINTS.tags}/${editId}`
+      : API_ENDPOINTS.tags;
 
-      await apiClient(endpoint, {
-        method,
-        token:token ?? undefined,
-        body: form,
-      });
+    await apiClient(endpoint, {
+      method,
+      token: token ?? undefined,
+      body: form,
+    });
 
-      handleReset();
-      fetchTags();
-
-    } catch (err) {
-      console.error("Error saving tag:", err);
-    }
+    handleReset();
+    fetchTags();
   };
 
   const handleEdit = (tag: Tag) => {
@@ -98,25 +84,18 @@ export default function TagPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this tag?")) return;
 
-    try {
-      await apiClient(`${API_ENDPOINTS.tags}/${id}`, {
-        method: "DELETE",
-        token:token ?? undefined,
-      });
+    await apiClient(`${API_ENDPOINTS.tags}/${id}`, {
+      method: "DELETE",
+      token: token ?? undefined,
+    });
 
-      fetchTags();
-    } catch (err) {
-      console.error("Error deleting tag:", err);
-    }
+    fetchTags();
   };
 
   return (
     <div className={`min-h-screen ${colors.background}`}>
       <div className="max-w-[1700px] mx-auto px-5 py-7">
-
-        <h1 className={`text-4xl font-bold mb-5`}>
-          Tag Management
-        </h1>
+        <h1 className={`text-4xl font-bold mb-5`}>Tag Management</h1>
 
         {/* ================= Form ================= */}
         <form
@@ -142,9 +121,7 @@ export default function TagPage() {
             </div>
 
             <div className="flex-1">
-              <label className="text-xs font-medium text-gray-600">
-                Slug
-              </label>
+              <label className="text-xs font-medium text-gray-600">Slug</label>
               <input
                 type="text"
                 value={form.slug}
@@ -178,9 +155,7 @@ export default function TagPage() {
         <div
           className={`shadow-lg rounded-2xl p-6 border mt-8 ${colors.card} ${colors.border}`}
         >
-          <h2 className={`text-xl font-semibold mb-6`}>
-            All Tags
-          </h2>
+          <h2 className={`text-xl font-semibold mb-6`}>All Tags</h2>
 
           {tags.length === 0 ? (
             <p className="text-gray-500">No tags found.</p>
@@ -192,12 +167,8 @@ export default function TagPage() {
                   className={`flex justify-between items-center border rounded-xl p-4 transition hover:opacity-90 ${colors.border}`}
                 >
                   <div>
-                    <h3 className={`font-semibold`}>
-                      {tag.name}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Slug: {tag.slug}
-                    </p>
+                    <h3 className={`font-semibold`}>{tag.name}</h3>
+                    <p className="text-sm text-gray-500">Slug: {tag.slug}</p>
                   </div>
 
                   <div className="flex gap-3">
@@ -220,7 +191,6 @@ export default function TagPage() {
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

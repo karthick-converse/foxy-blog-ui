@@ -38,8 +38,6 @@ export default function MyLikes() {
         });
 
         setLikes(Array.isArray(res?.data) ? res.data : []);
-      } catch (error) {
-        console.error("Failed to fetch reactions:", error);
       } finally {
         setLoading(false);
       }

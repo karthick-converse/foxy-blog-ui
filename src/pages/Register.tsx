@@ -52,10 +52,10 @@ export default function SignUp() {
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         {/* LEFT SIDE (hidden on mobile) */}
         <div className="hidden lg:flex flex-col justify-center space-y-6">
-          <h1 className={`text-4xl font-bold ${colors.text.primary}`}>
+          <h1 className={`text-4xl font-bold`}>
             Join Us 🚀
           </h1>
-          <p className={`text-lg ${colors.text.muted}`}>
+          <p className={`text-lg `}>
             Create an account to start publishing blogs and managing your
             content.
           </p>
@@ -67,14 +67,14 @@ export default function SignUp() {
           className={`w-full max-w-md mx-auto space-y-6 rounded-2xl p-8 shadow-xl border backdrop-blur-sm ${colors.card} ${colors.border}`}
         >
           <h2
-            className={`text-center text-2xl sm:text-3xl font-bold ${colors.text.primary}`}
+            className={`text-center text-2xl sm:text-3xl font-bold `}
           >
             Create Account
           </h2>
 
           {/* Name */}
           <div className="space-y-2">
-            <Label className={colors.text.primary}>Name</Label>
+            <Label className="text-sm font-medium">Name</Label>
             <Input
               name="name"
               placeholder="Your name"
@@ -85,7 +85,7 @@ export default function SignUp() {
 
           {/* Email */}
           <div className="space-y-2">
-            <Label className={colors.text.primary}>Email</Label>
+            <Label className="text-sm font-medium">Email</Label>
             <Input
               name="email"
               type="email"

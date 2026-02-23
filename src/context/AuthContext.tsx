@@ -1,66 +1,52 @@
-'use client'
+"use client";
 
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react";
+import type { AuthContextType, User } from "../interface/User";
 
-interface User {
-  email: string
-  role: "admin" | "user"
-}
-
-interface AuthContextType {
-  user: User | null
-  token: string | null
-  isAuthenticated: boolean
-  login: (token: string, user: User) => void
-  logout: () => void
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [token, setToken] = useState<string | null>(null)
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token")
-    const storedUser = localStorage.getItem("user")
+    const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
 
-    if (!storedToken || !storedUser) return
+    if (!storedToken || !storedUser) return;
 
     try {
-      const parsedUser = JSON.parse(storedUser)
+      const parsedUser = JSON.parse(storedUser);
 
       if (!parsedUser?.email || !parsedUser?.role) {
-        throw new Error("Invalid user shape")
+        throw new Error("Invalid user shape");
       }
 
-      setToken(storedToken)
-      setUser(parsedUser)
+      setToken(storedToken);
+      setUser(parsedUser);
     } catch (err) {
-      console.error("Invalid auth data, clearing storage")
-      localStorage.clear()
-      setToken(null)
-      setUser(null)
+      localStorage.clear();
+      setToken(null);
+      setUser(null);
     }
-  }, [])
+  }, []);
 
   const login = (token: string, user: User) => {
-    if (!user) { 
-      console.error("❌ Tried to save empty user")
-      return
+    if (!user) {
+      return;
     }
 
-    localStorage.setItem("token", token)
-    localStorage.setItem("user", JSON.stringify(user))
-    setToken(token)
-    setUser(user)
-  }
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    setToken(token);
+    setUser(user);
+  };
 
   const logout = () => {
-    localStorage.clear()
-    setToken(null)
-    setUser(null)
-  }
+    localStorage.clear();
+    setToken(null);
+    setUser(null);
+  };
 
   return (
     <AuthContext.Provider
@@ -74,13 +60,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
     </AuthContext.Provider>
-  )
+  );
 }
 
 export function useAuth() {
-  const ctx = useContext(AuthContext)
+  const ctx = useContext(AuthContext);
   if (!ctx) {
-    throw new Error("useAuth must be used within AuthProvider")
+    throw new Error("useAuth must be used within AuthProvider");
   }
-  return ctx
+  return ctx;
 }

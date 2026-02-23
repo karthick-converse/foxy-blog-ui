@@ -11,13 +11,9 @@ import {
 import { apiClient } from "../../lib/apiClient";
 import { API_ENDPOINTS } from "../../lib/endpoints";
 import { useAuth } from "../../context/AuthContext";
+import type { Notification } from "../../interface/Notification";
 
-interface Notification {
-  _id: string;
-  message: string;
-  read: boolean;
-  createdAt: string;
-}
+
 
 export default function NotificationLink() {
   const { token } = useAuth();
@@ -26,52 +22,36 @@ export default function NotificationLink() {
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
   const fetchNotifications = async () => {
-    try {
-      const res = await apiClient(`${API_ENDPOINTS.notification}`, {
-        method: "GET",
-        token: token ?? undefined,
-      });
-      setNotifications(res);
-    } catch (error) {
-      console.error(error);
-    }
+    const res = await apiClient(`${API_ENDPOINTS.notification}`, {
+      method: "GET",
+      token: token ?? undefined,
+    });
+    setNotifications(res);
   };
 
   const fetchUnreadCount = async () => {
-    try {
-      const res = await apiClient(
-        `${API_ENDPOINTS.notification}/unread-count`,
-        {
-          method: "GET",
-          token: token ?? undefined,
-        },
-      );
-      setUnreadCount(res.unread);
-    } catch (error) {
-      console.error(error);
-    }
+    const res = await apiClient(`${API_ENDPOINTS.notification}/unread-count`, {
+      method: "GET",
+      token: token ?? undefined,
+    });
+    setUnreadCount(res.unread);
   };
 
   const markAsRead = async (id: string) => {
-    try {
-      await apiClient(`${API_ENDPOINTS.notification}/${id}/read`, {
-        method: "PUT",
-        token: token ?? undefined,
-      });
+    await apiClient(`${API_ENDPOINTS.notification}/${id}/read`, {
+      method: "PUT",
+      token: token ?? undefined,
+    });
 
-      setNotifications((prev) =>
-        prev.map((n) => (n._id === id ? { ...n, read: true } : n)),
-      );
+    setNotifications((prev) =>
+      prev.map((n) => (n._id === id ? { ...n, read: true } : n)),
+    );
 
-      setUnreadCount((prev) => (prev > 0 ? prev - 1 : 0));
-      fetchNotifications();
-    } catch (error) {
-      console.error(error);
-    }
+    setUnreadCount((prev) => (prev > 0 ? prev - 1 : 0));
+    fetchNotifications();
   };
 
   const markAllAsRead = async () => {
-    try {
       await apiClient(`${API_ENDPOINTS.notification}/read-all`, {
         method: "PUT",
         token: token ?? undefined,
@@ -81,9 +61,7 @@ export default function NotificationLink() {
 
       setUnreadCount(0);
       fetchNotifications();
-    } catch (error) {
-      console.error(error);
-    }
+    
   };
 
   useEffect(() => {

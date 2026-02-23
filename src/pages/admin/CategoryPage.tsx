@@ -6,13 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import { apiClient } from "../../lib/apiClient";
 import { API_ENDPOINTS } from "../../lib/endpoints";
 import { colors } from "../../theme/colors";
-
-interface Category {
-  _id: string;
-  name: string;
-  slug: string;
-  description: string;
-}
+import type { Category } from "../../interface/Category";
 
 export default function CategoryPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -33,15 +27,11 @@ export default function CategoryPage() {
     setEditId(null);
   };
   const fetchCategories = async () => {
-    try {
-      const data = await apiClient(API_ENDPOINTS.categories, {
-        token: token ?? undefined,
-      });
+    const data = await apiClient(API_ENDPOINTS.categories, {
+      token: token ?? undefined,
+    });
 
-      setCategories(data);
-    } catch (err) {
-      console.error("Error fetching categories:", err);
-    }
+    setCategories(data);
   };
 
   useEffect(() => {
@@ -61,34 +51,32 @@ export default function CategoryPage() {
     const value = e.target.value;
 
     setForm((prev) => ({
-      ...prev,[e.target.name]:value,...(e.target.name === "name"&&{slug:generateSlug(value)})
+      ...prev,
+      [e.target.name]: value,
+      ...(e.target.name === "name" && { slug: generateSlug(value) }),
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      if (editId) {
-        await apiClient(`${API_ENDPOINTS.categories}/${editId}`, {
-          method: "PUT",
-          body: form,
-          token: token ?? undefined,
-        });
-      } else {
-        await apiClient(API_ENDPOINTS.categories, {
-          method: "POST",
-          body: form,
-          token: token ?? undefined,
-        });
-      }
-
-      setForm({ name: "", slug: "", description: "" });
-      setEditId(null);
-      fetchCategories();
-    } catch (err) {
-      console.error("Error saving category:", err);
+    if (editId) {
+      await apiClient(`${API_ENDPOINTS.categories}/${editId}`, {
+        method: "PUT",
+        body: form,
+        token: token ?? undefined,
+      });
+    } else {
+      await apiClient(API_ENDPOINTS.categories, {
+        method: "POST",
+        body: form,
+        token: token ?? undefined,
+      });
     }
+
+    setForm({ name: "", slug: "", description: "" });
+    setEditId(null);
+    fetchCategories();
   };
 
   const handleEdit = (category: Category) => {
@@ -97,30 +85,24 @@ export default function CategoryPage() {
   };
 
   const handleDelete = async (id: string) => {
-    try {
-      await apiClient(`${API_ENDPOINTS.categories}/${id}`, {
-        method: "DELETE",
-        token: token ?? undefined,
-      });
+    await apiClient(`${API_ENDPOINTS.categories}/${id}`, {
+      method: "DELETE",
+      token: token ?? undefined,
+    });
 
-      fetchCategories();
-    } catch (err) {
-      console.error("Error deleting category:", err);
-    }
+    fetchCategories();
   };
 
   return (
     <div className={`max-w-[1700px] mx-auto p-6 ${colors.background}`}>
-      <h1 className={`text-3xl font-bold mb-8`}>
-        Category Management
-      </h1>
+      <h1 className={`text-3xl font-bold mb-8`}>Category Management</h1>
 
       <div>
         <form
           onSubmit={handleSubmit}
           className={`shadow-md rounded-lg p-5 border ${colors.card} ${colors.border}`}
         >
-           <h2 className={`text-lg font-semibold mb-4`}>
+          <h2 className={`text-lg font-semibold mb-4`}>
             {editId ? "Edit Category" : "Create Category"}
           </h2>
           <div className="flex flex-col lg:flex-row items-end gap-4">
@@ -194,9 +176,7 @@ export default function CategoryPage() {
         <div
           className={`shadow-md rounded-lg p-6 mt-8 mb-20 border ${colors.card} ${colors.border}`}
         >
-          <h2 className={`text-xl font-semibold mb-8`}>
-            All Categories
-          </h2>
+          <h2 className={`text-xl font-semibold mb-8`}>All Categories</h2>
 
           {categories.length === 0 ? (
             <p className={colors.text.muted}>No categories found.</p>
@@ -208,16 +188,10 @@ export default function CategoryPage() {
                   className={`flex justify-between items-center p-4 rounded-md border ${colors.border}`}
                 >
                   <div>
-                    <h3 className={`font-bold`}>
-                      {cat.name}
-                    </h3>
-                    <p className={`text-sm  text-gray-500`}>
-                      Slug: {cat.slug}
-                    </p>
+                    <h3 className={`font-bold`}>{cat.name}</h3>
+                    <p className={`text-sm  text-gray-500`}>Slug: {cat.slug}</p>
                     {cat.description && (
-                      <p className={`text-sm`}>
-                        {cat.description}
-                      </p>
+                      <p className={`text-sm`}>{cat.description}</p>
                     )}
                   </div>
 

@@ -17,13 +17,9 @@ import ProfileActivitySection from "./ProfileActivitySection";
 import { apiClient } from "../../lib/apiClient";
 import { API_ENDPOINTS } from "../../lib/endpoints";
 import { colors } from "../../theme/colors";
-type SocialKey =
-  | "twitter"
-  | "github"
-  | "linkedin"
-  | "youtube"
-  | "facebook"
-  | "instagram";
+import type { User } from "../../interface/User";
+import type { Profile } from "../../interface/profile";
+import type { SocialKey } from "../../types/share";
 
 export default function ProfilePage() {
   const { token } = useAuth();
@@ -45,9 +41,9 @@ export default function ProfilePage() {
     },
   };
 
-  const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState(defaultProfile);
-  const [tempProfile, setTempProfile] = useState(defaultProfile);
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile>(defaultProfile);
+  const [tempProfile, setTempProfile] = useState<Profile>(defaultProfile);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -74,12 +70,12 @@ export default function ProfilePage() {
   }, [token]);
 
   /* ================= AUTO SAVE ================= */
-  const autoSave = async (updatedProfile: any) => {
+  const autoSave = async (updatedProfile: Profile) => {
     try {
       await apiClient(API_ENDPOINTS.users + "/profile", {
         method: "PUT",
         token: token ?? undefined,
-        body: updatedProfile,
+        body: updatedProfile as unknown as Record<string, unknown>,
       });
     } catch {
       toast.error("Auto save failed");
@@ -130,7 +126,7 @@ export default function ProfilePage() {
       await apiClient(API_ENDPOINTS.users + "/profile", {
         method: "PUT",
         token: token ?? undefined,
-        body: tempProfile,
+        body: tempProfile as unknown as Record<string, unknown>,
       });
 
       setProfile(tempProfile);
@@ -385,7 +381,7 @@ export default function ProfilePage() {
                     </label>
                     <Input
                       className="w-full"
-                      value={(tempProfile.socials as any)[key]}
+                      value={tempProfile.socials[key as SocialKey]}
                       onChange={(e) =>
                         setTempProfile({
                           ...tempProfile,

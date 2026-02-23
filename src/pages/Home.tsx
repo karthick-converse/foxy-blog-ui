@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import BlogCard from "./BlogCard";
 import { apiClient } from "../lib/apiClient";
 import { API_ENDPOINTS } from "../lib/endpoints";
-import BlogCarousel from "../components/common/scrollimage";
+import BlogCarousel, { type Blog } from "../components/common/scrollimage";
 import { motion } from "framer-motion";
 import { colors } from "../theme/colors";
 import type { ReactionType } from "../components/common/Reaction";
@@ -26,7 +26,7 @@ export default function Home() {
   const [userReactions, setUserReactions] = useState<
     Record<string, ReactionType>
   >({});
-  const [heroBlog, setHeroBlog] = useState<string[]>([]);
+  const [heroBlog, setHeroBlog] = useState<Blog[]>([]);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
@@ -48,16 +48,12 @@ export default function Home() {
   /* ================= FETCH CATEGORIES ================= */
   useEffect(() => {
     const fetchCategories = async () => {
-      try {
-        const data = await apiClient(API_ENDPOINTS.categories, {
-          method: "GET",
-        });
+      const data = await apiClient(API_ENDPOINTS.categories, {
+        method: "GET",
+      });
 
-        const categoryList = data?.categories || data || [];
-        setCategories(categoryList.slice(0, 6));
-      } catch (err) {
-        console.error("Category fetch error:", err);
-      }
+      const categoryList = data?.categories || data || [];
+      setCategories(categoryList.slice(0, 6));
     };
 
     fetchCategories();
@@ -66,15 +62,11 @@ export default function Home() {
   /* ================= FETCH HERO BLOG ================= */
   useEffect(() => {
     const fetchHeroBlog = async () => {
-      try {
-        const res = await apiClient(`${API_ENDPOINTS.posts}?page=1&limit=10`, {
-          method: "GET",
-        });
+      const res = await apiClient(`${API_ENDPOINTS.posts}?page=1&limit=10`, {
+        method: "GET",
+      });
 
-        setHeroBlog(res?.data?.blogs || null);
-      } catch (error) {
-        console.error("Hero blog error:", error);
-      }
+      setHeroBlog(res?.data?.blogs || null);
     };
 
     fetchHeroBlog();
@@ -106,8 +98,6 @@ export default function Home() {
         );
 
         setBlogs(res?.data?.blogs || []);
-      } catch (error) {
-        console.error("Blog fetch error:", error);
       } finally {
         setLoading(false);
       }
@@ -121,20 +111,15 @@ export default function Home() {
     if (!isAuthenticated || !token) return;
 
     const fetchBookmarks = async () => {
-      try {
-        const res = await apiClient(API_ENDPOINTS.bookmark, {
-          method: "GET",
-          token,
-        });
+      const res = await apiClient(API_ENDPOINTS.bookmark, {
+        method: "GET",
+        token,
+      });
 
-        const ids = Array.isArray(res)
-          ? (res as BookmarkResponse[]).map((b) => b.postId._id)
-          : [];
-          console.log('ids', ids)
-        setBookmarkedIds(ids);
-      } catch (err) {
-        console.error("Bookmark fetch error:", err);
-      }
+      const ids = Array.isArray(res)
+        ? (res as BookmarkResponse[]).map((b) => b.postId._id)
+        : [];
+      setBookmarkedIds(ids);
     };
 
     fetchBookmarks();
@@ -145,28 +130,23 @@ export default function Home() {
     if (!isAuthenticated || !token) return;
 
     const fetchUserReactions = async () => {
-      try {
-        const res = await apiClient(API_ENDPOINTS.userReactions, {
-          method: "GET",
-          token,
-        });
+      const res = await apiClient(API_ENDPOINTS.userReactions, {
+        method: "GET",
+        token,
+      });
 
-        const reactionsArray = res?.data ?? [];
-        if (!Array.isArray(reactionsArray)) {
-          console.error("Reactions is not array:", reactionsArray);
-          return;
-        }
-
-        const reactionMap: Record<string, ReactionType> = {};
-
-        reactionsArray.forEach((r: any) => {
-          reactionMap[r.targetId._id] = r.reaction;
-        });
-
-        setUserReactions(reactionMap);
-      } catch (err) {
-        console.error("Reaction fetch error:", err);
+      const reactionsArray = res?.data ?? [];
+      if (!Array.isArray(reactionsArray)) {
+        return;
       }
+
+      const reactionMap: Record<string, ReactionType> = {};
+
+      reactionsArray.forEach((r: any) => {
+        reactionMap[r.targetId._id] = r.reaction;
+      });
+
+      setUserReactions(reactionMap);
     };
 
     fetchUserReactions();

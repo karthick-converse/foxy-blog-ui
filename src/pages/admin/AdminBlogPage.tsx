@@ -17,24 +17,13 @@ import {
   SelectContent,
   SelectItem,
 } from "../../components/ui/select";
-
-interface Blog {
-  _id: string;
-  title: string;
-  coverImageUrl: string;
-  slug: string;
-  status: string;
-  createdAt: string;
-  isDeleted: boolean;
-  authorId: { name: string };
-  categoryId: { name: string };
-}
+import type { AdminBlog } from "../../interface/Blog";
 
 export default function AdminBlogPage() {
   const { token } = useAuth();
   const navigate = useNavigate();
 
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [blogs, setBlogs] = useState<AdminBlog[]>([]);
   const [filter, setFilter] = useState("all");
 
   const fetchBlogs = async () => {

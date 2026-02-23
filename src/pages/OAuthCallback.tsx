@@ -40,7 +40,6 @@ export default function OAuthCallback() {
 
         window.location.replace("/");
       } catch (error) {
-        console.error(error);
         toast.error("Google login failed");
         window.location.replace("/signin");
       }

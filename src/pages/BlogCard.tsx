@@ -19,19 +19,15 @@ import ReactionPopover from "../components/common/Reaction";
 import { apiClient } from "../lib/apiClient";
 import { API_ENDPOINTS } from "../lib/endpoints";
 import { colors } from "../theme/colors";
-
-/* ---------------- REACTION TYPES ---------------- */
-
-type ReactionType = "like" | "love" | "fire" | "insightful";
+import type { BlogCard } from "../interface/Blog";
+import type { ReactionType } from "../types/reaction.type";
 
 const reactionIcons = {
   like: ThumbsUp,
   love: Heart,
   insightful: Lightbulb,
-  fire: Sparkles, 
+  fire: Sparkles,
 };
-
-/* ---------------- COMPONENT ---------------- */
 
 function BlogCard({
   blog,
@@ -40,7 +36,7 @@ function BlogCard({
   onBookmarkToggle,
   onReactionChange,
 }: {
-  blog: any;
+  blog: BlogCard;
   isBookmarked: boolean;
   isReacted: boolean;
   userReaction: ReactionType | null;
@@ -65,7 +61,7 @@ function BlogCard({
     onBookmarkToggle(blog._id, next);
 
     try {
-      await apiClient(`${API_ENDPOINTS.bookmark}/${blog.id}`, {
+      await apiClient(`${API_ENDPOINTS.bookmark}/${blog._id}`, {
         method: "POST",
         token: token ?? undefined,
       });
@@ -148,7 +144,7 @@ function BlogCard({
 
         {/* TAGS */}
         <div className="flex gap-2 flex-wrap">
-          {blog.tags?.slice(0, 3).map((tag: any) => (
+          {blog.tags?.slice(0, 3).map((tag) => (
             <span
               key={tag._id || tag.id}
               className="text-[10px] sm:text-xs bg-indigo-100 text-gray-600 px-2 py-1 rounded-full"
@@ -199,7 +195,7 @@ function BlogCard({
               )}
 
               <ReactionPopover
-                targetId={blog.id}
+                targetId={blog._id}
                 targetType="post"
                 totalCount={totalReactions}
                 initialReaction={userReaction}
@@ -208,7 +204,7 @@ function BlogCard({
                 token={token}
                 isAuthenticated={isAuthenticated}
                 onReactionChange={(reaction) =>
-                  onReactionChange(blog.id, reaction)
+                  onReactionChange(blog._id, reaction)
                 }
               />
             </div>

@@ -10,22 +10,9 @@ import { apiClient } from "../lib/apiClient";
 import { API_ENDPOINTS } from "../lib/endpoints";
 import { useAuth } from "../context/AuthContext";
 import { colors } from "../theme/colors";
-
-/* ---------------- TYPES ---------------- */
-
-interface CommentType {
-  _id: string;
-  authorId: {
-    _id: string;
-    name: string;
-  };
-  body: string;
-  status: string;
-  createdAt: string;
-  replays: CommentType[];
-}
-
-type ReactionType = "like" | "love" | "fire" | "insightful";
+import type { CommentType } from "../interface/Comment";
+import type { ReactionType } from "../types/reaction.type";
+import type { SingleBlog } from "../interface/Blog";
 
 const reactionTypes: ReactionType[] = ["like", "love", "fire", "insightful"];
 
@@ -36,13 +23,11 @@ const emojiMap: Record<ReactionType, string> = {
   insightful: "💡",
 };
 
-/* ---------------- COMPONENT ---------------- */
-
 export default function SingleBlog() {
   const { token } = useAuth();
   const [comments, setComments] = useState<CommentType[]>([]);
   const [commentText, setCommentText] = useState("");
-  const [blog, setBlog] = useState<any>(null);
+  const [blog, setBlog] = useState<SingleBlog | null>(null);
   const [userReaction, setUserReaction] = useState<ReactionType | null>(null);
 
   const { slug } = useParams();
@@ -124,9 +109,10 @@ export default function SingleBlog() {
 
     setUserReaction(newReaction);
 
-    setBlog((prev: any) => {
+    setBlog((prev) => {
+      if (!prev) return prev;
       const updated = { ...prev };
-      const breakdown = { ...updated.stats.breakdown };
+      const breakdown = { ...updated.stats.reactions.breakdown };
 
       if (previousReaction) {
         breakdown[previousReaction] = Math.max(
@@ -139,7 +125,7 @@ export default function SingleBlog() {
         breakdown[newReaction] += 1;
       }
 
-      updated.stats.breakdown = breakdown;
+      updated.stats.reactions.breakdown = breakdown;
       return updated;
     });
 
@@ -149,7 +135,7 @@ export default function SingleBlog() {
         token,
         body: {
           targetType: "post",
-          targetId: blog._id,
+          targetId: blog!._id,
           reaction: newReaction,
         },
       });
@@ -170,11 +156,14 @@ export default function SingleBlog() {
       return;
     }
 
-    const newComment = await apiClient(API_ENDPOINTS.commentsByPost(blog._id), {
-      method: "POST",
-      token,
-      body: { body: commentText },
-    });
+    const newComment = await apiClient(
+      API_ENDPOINTS.commentsByPost(blog!._id),
+      {
+        method: "POST",
+        token,
+        body: { body: commentText },
+      },
+    );
 
     setComments((prev) => [newComment.data ?? newComment, ...prev]);
 
@@ -347,7 +336,7 @@ export default function SingleBlog() {
               <h3 className="text-2xl font-semibold">Related Blogs</h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {blog.relatedPosts.map((item: any) => (
+                {blog.relatedPosts.map((item) => (
                   <div
                     key={item._id}
                     onClick={() => navigator(`/blog/${item.slug}`)}

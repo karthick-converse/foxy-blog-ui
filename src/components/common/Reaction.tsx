@@ -11,22 +11,8 @@ import {
 } from "../../components/ui/popover";
 import { apiClient } from "../../lib/apiClient";
 import { API_ENDPOINTS } from "../../lib/endpoints";
-
-export type ReactionType = "like" | "love" | "fire" | "insightful";
-
-type Breakdown = Record<ReactionType, number>;
-
-interface ReactionPopoverProps {
-  targetType: string;
-  targetId: string;
-  totalCount: number;
-  breakdown?: Partial<Breakdown>;
-  initialReaction: ReactionType | null;
-  reactions: any[];
-  token: string | null;
-  isAuthenticated: boolean;
-  onReactionChange?: (reaction: ReactionType | null, newCount: number) => void;
-}
+import type { ReactionPopoverProps } from "../../interface/Reaction";
+import type { Breakdown, ReactionType } from "../../types/reaction.type";
 
 export default function ReactionPopover({
   targetType,

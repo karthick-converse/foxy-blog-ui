@@ -11,17 +11,8 @@ import { colors } from "../../theme/colors";
 import { apiClient } from "../../lib/apiClient";
 import { API_ENDPOINTS } from "../../lib/endpoints";
 import { useAuth } from "../../context/AuthContext";
-type Share = {
-  _id: string;
-  sharedAt: string;
-  platform: string;
-  post: {
-    _id: string;
-    slug: string;
-    title: string;
-    coverImageUrl: string;
-  };
-};
+import type { ShareResponse } from "../../interface/share";
+import type { Share } from "../../types/share";
 
 export default function MyShares() {
   const navigate = useNavigate();
@@ -38,8 +29,10 @@ export default function MyShares() {
           token: token ?? undefined,
         });
 
+       
+
         const formatted = Array.isArray(res?.data)
-          ? res.data.map((s: any) => ({
+          ? (res.data as ShareResponse[]).map((s) => ({
               _id: s._id,
               sharedAt: s.sharedAt || s.createdAt,
               platform: s.platform,
@@ -48,8 +41,6 @@ export default function MyShares() {
           : [];
 
         setShares(formatted);
-      } catch (error) {
-        console.error("Failed to fetch shares:", error);
       } finally {
         setLoading(false);
       }

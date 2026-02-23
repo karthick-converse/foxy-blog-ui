@@ -35,11 +35,8 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useEffect } from "react";
+import type { Props } from "../../interface/richtext";
 
-interface Props {
-  value?: string;
-  onChange: (html: string, json:any) => void;
-}
 
 export default function RichTextEditor({ value, onChange }: Props) {
   useEffect(() => {

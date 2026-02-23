@@ -1,12 +1,7 @@
 import { toast } from "sonner";
+import type { ApiOptions } from "../interface/ApiOption";
 
-export interface ApiOptions {
-  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-  body?: any;
-  token?: string;
-}
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const apiClient = async (endpoint: string, options: ApiOptions = {}) => {
   const { method = "GET", body, token } = options;
   const headers: HeadersInit = {};
@@ -26,7 +21,7 @@ export const apiClient = async (endpoint: string, options: ApiOptions = {}) => {
   });
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
-    toast.error(error.message)
+    toast.error(error.message);
     throw new Error(error.message || "Something went wrong");
   }
 
